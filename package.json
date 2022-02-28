@@ -1,16 +1,19 @@
 {
-  "name": "@xtradeiom/ksqldb-client",
+  "name": "ksqldb-client",
   "private": true,
-  "main": "./dist/index.js",
-  "version": "0.0.12",
+  "main": "./dist/src/index.js",
+  "types": "./dist/src/types.d.ts",
+  "version": "0.0.14",
   "scripts": {
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
     "test": "jest",
     "coverage": "jest --collect-coverage",
     "clean": "rm -rf dist build package",
     "ts-node": "ts-node",
-    "build": "tsc -p tsconfig.json",
-    "typecheck": "tsc -p ./tsconfig.json --noEmit"
+    "build": "npm run clean && tsc -p tsconfig.json",
+    "typecheck": "tsc -p ./tsconfig.json --noEmit",
+    "format": "prettier --write .",
+    "postinstall": "npm run clean && npx tsc -p tsconfig.json"
   },
   "devDependencies": {
     "@types/jest": "^27.4.0",

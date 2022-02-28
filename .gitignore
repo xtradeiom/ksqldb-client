@@ -3,6 +3,7 @@
 /lib/
 /docs/
 .idea/*
+dist
 
 .DS_Store
 coverage
