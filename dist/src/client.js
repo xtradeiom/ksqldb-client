@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.connect = void 0;
-const lodash_1 = require("lodash");
-const http2 = require("http2");
-const axios_1 = require("axios");
-const transform_1 = require("./transform");
+import _ from 'lodash';
+import * as http2 from 'http2';
+import axios from 'axios';
+import { toJson } from './transform';
 const createRequest = (client, headers) => client.request(headers);
 const createHeaders = (path, options = {}, method = 'POST') => (Object.assign({ [http2.constants.HTTP2_HEADER_PATH]: path, [http2.constants.HTTP2_HEADER_METHOD]: method, [http2.constants.HTTP2_HEADER_CONTENT_TYPE]: 'application/vnd.ksql.v1+json' }, options.headers));
 const createQueryStream = (client, options = {}) => {
@@ -20,10 +17,10 @@ const createInsertStream = (client, options = {}) => {
     return stream;
 };
 // Quotes object keys and converts to json strings
-const convertInsertPayload = (data) => lodash_1.default.castArray(data).map((e) => JSON.stringify(lodash_1.default.zipObject(lodash_1.default.keys(e).map((key) => `"${key}"`), lodash_1.default.values(e))));
+const convertInsertPayload = (data) => _.castArray(data).map((e) => JSON.stringify(_.zipObject(_.keys(e).map((key) => `"${key}"`), _.values(e))));
 // Executes a statement against the http 1 /ksql endpoint
 const executeStatement = (url, sql) => {
-    const response = axios_1.default.post(`${url}/ksql`, JSON.stringify({
+    const response = axios.post(`${url}/ksql`, JSON.stringify({
         ksql: sql,
     }), {
         headers: {
@@ -32,7 +29,7 @@ const executeStatement = (url, sql) => {
     });
     return response;
 };
-const connect = (url = 'http://localhost:8088') => new Promise((resolve, reject) => {
+export const connect = (url = 'http://localhost:8088') => new Promise((resolve, reject) => {
     const client = http2.connect(url);
     const ksqldb = {
         // Maps to the /query-stream endpoint
@@ -43,16 +40,16 @@ const connect = (url = 'http://localhost:8088') => new Promise((resolve, reject)
                     sql: query,
                 }
                 : query));
-            const resultStream = options.transform !== 'json' ? stream : stream.pipe(transform_1.toJson);
+            const resultStream = options.transform !== 'json' ? stream : stream.pipe(toJson);
             stream.end(payload);
             return resultStream;
         },
         // Maps to the /insert-stream endpoint
         insert: (target, data, options = {}) => {
             const stream = createInsertStream(client, options);
-            const mappedData = lodash_1.default.concat(
+            const mappedData = _.concat(
             // Ensure double quotes are removed and added back to ensure case sensitivity
-            JSON.stringify({ target: `"${lodash_1.default.replace(target, '"', '')}"` }), convertInsertPayload(data));
+            JSON.stringify({ target: `"${_.replace(target, '"', '')}"` }), convertInsertPayload(data));
             stream.write(mappedData.join('\n'));
             stream.end();
             return stream;
@@ -74,6 +71,5 @@ const connect = (url = 'http://localhost:8088') => new Promise((resolve, reject)
     client.on('error', reject);
     client.on('connect', () => resolve(ksqldb));
 });
-exports.connect = connect;
-exports.default = { connect: exports.connect };
+export default { connect };
 //# sourceMappingURL=client.js.map
