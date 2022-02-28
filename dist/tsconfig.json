@@ -2,7 +2,7 @@
     "compilerOptions": {
         "strict": true,
         "target": "es6",
-        "module": "ESNext",
+        "module": "CommonJS",
         "declaration": true,
         "noImplicitAny": true /* Raise error on expressions and declarations with an implied 'any' type. */,
         "strictNullChecks": true /* Enable strict null checks. */,

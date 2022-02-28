@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import * as _ from 'lodash';
 import * as http2 from 'http2';
 import axios, { AxiosResponse } from 'axios';
 import type { Duplex } from 'stream';

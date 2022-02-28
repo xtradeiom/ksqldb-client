@@ -1,7 +1,11 @@
-import _ from 'lodash';
-import * as http2 from 'http2';
-import axios from 'axios';
-import { toJson } from './transform';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.connect = void 0;
+const tslib_1 = require("tslib");
+const _ = (0, tslib_1.__importStar)(require("lodash"));
+const http2 = (0, tslib_1.__importStar)(require("http2"));
+const axios_1 = (0, tslib_1.__importDefault)(require("axios"));
+const transform_1 = require("./transform");
 const createRequest = (client, headers) => client.request(headers);
 const createHeaders = (path, options = {}, method = 'POST') => (Object.assign({ [http2.constants.HTTP2_HEADER_PATH]: path, [http2.constants.HTTP2_HEADER_METHOD]: method, [http2.constants.HTTP2_HEADER_CONTENT_TYPE]: 'application/vnd.ksql.v1+json' }, options.headers));
 const createQueryStream = (client, options = {}) => {
@@ -20,7 +24,7 @@ const createInsertStream = (client, options = {}) => {
 const convertInsertPayload = (data) => _.castArray(data).map((e) => JSON.stringify(_.zipObject(_.keys(e).map((key) => `"${key}"`), _.values(e))));
 // Executes a statement against the http 1 /ksql endpoint
 const executeStatement = (url, sql) => {
-    const response = axios.post(`${url}/ksql`, JSON.stringify({
+    const response = axios_1.default.post(`${url}/ksql`, JSON.stringify({
         ksql: sql,
     }), {
         headers: {
@@ -29,7 +33,7 @@ const executeStatement = (url, sql) => {
     });
     return response;
 };
-export const connect = (url = 'http://localhost:8088') => new Promise((resolve, reject) => {
+const connect = (url = 'http://localhost:8088') => new Promise((resolve, reject) => {
     const client = http2.connect(url);
     const ksqldb = {
         // Maps to the /query-stream endpoint
@@ -40,7 +44,7 @@ export const connect = (url = 'http://localhost:8088') => new Promise((resolve, 
                     sql: query,
                 }
                 : query));
-            const resultStream = options.transform !== 'json' ? stream : stream.pipe(toJson);
+            const resultStream = options.transform !== 'json' ? stream : stream.pipe(transform_1.toJson);
             stream.end(payload);
             return resultStream;
         },
@@ -71,5 +75,6 @@ export const connect = (url = 'http://localhost:8088') => new Promise((resolve, 
     client.on('error', reject);
     client.on('connect', () => resolve(ksqldb));
 });
-export default { connect };
+exports.connect = connect;
+exports.default = { connect: exports.connect };
 //# sourceMappingURL=client.js.map

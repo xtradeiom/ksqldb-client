@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import _ from 'lodash';
+import * as _ from 'lodash';
 import { Transform, TransformCallback } from 'stream';
 
 export class JsonResponseStream extends Transform {
@@ -43,7 +43,7 @@ export class JsonResponseStream extends Transform {
       // and fix it to instead find those newlines where they split each arraylike string [] item if so
       // --------------------------------------------------------------------------------------------------------
       // At this stage the chunk must end in a new line so we can process it
-      _(`${this._chunk}${chunk}`)
+      _.chain(`${this._chunk}${chunk}`)
         .split('\n')
         .compact()
         .forEach((c) => {

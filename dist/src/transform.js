@@ -1,7 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.toJson = exports.JsonResponseStream = void 0;
+const tslib_1 = require("tslib");
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import _ from 'lodash';
-import { Transform } from 'stream';
-export class JsonResponseStream extends Transform {
+const _ = (0, tslib_1.__importStar)(require("lodash"));
+const stream_1 = require("stream");
+class JsonResponseStream extends stream_1.Transform {
     constructor() {
         super({ objectMode: true });
         this.columnNames = null;
@@ -34,7 +38,7 @@ export class JsonResponseStream extends Transform {
             // and fix it to instead find those newlines where they split each arraylike string [] item if so
             // --------------------------------------------------------------------------------------------------------
             // At this stage the chunk must end in a new line so we can process it
-            _(`${this._chunk}${chunk}`)
+            _.chain(`${this._chunk}${chunk}`)
                 .split('\n')
                 .compact()
                 .forEach((c) => {
@@ -54,5 +58,6 @@ export class JsonResponseStream extends Transform {
         }
     }
 }
-export const toJson = new JsonResponseStream();
+exports.JsonResponseStream = JsonResponseStream;
+exports.toJson = new JsonResponseStream();
 //# sourceMappingURL=transform.js.map
