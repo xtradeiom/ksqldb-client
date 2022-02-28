@@ -2,7 +2,7 @@
   "name": "@xtradeiom/ksqldb-client",
   "private": true,
   "main": "./dist/index.js",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "scripts": {
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
     "test": "jest",
@@ -15,7 +15,7 @@
   "devDependencies": {
     "@types/jest": "^27.4.0",
     "@types/lodash": "^4.14.178",
-    "@types/node": ">=16.13.0",
+    "@types/node": ">=16.13.2",
     "@typescript-eslint/eslint-plugin": "^5.12.1",
     "@typescript-eslint/parser": "^5.12.1",
     "eslint": "^8.9.0",

@@ -2,11 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.connect = void 0;
 const lodash_1 = require("lodash");
-const http2_1 = require("http2");
+const http2 = require("http2");
 const axios_1 = require("axios");
 const transform_1 = require("./transform");
 const createRequest = (client, headers) => client.request(headers);
-const createHeaders = (path, options = {}, method = 'POST') => (Object.assign({ [http2_1.default.constants.HTTP2_HEADER_PATH]: path, [http2_1.default.constants.HTTP2_HEADER_METHOD]: method, [http2_1.default.constants.HTTP2_HEADER_CONTENT_TYPE]: 'application/vnd.ksql.v1+json' }, options.headers));
+const createHeaders = (path, options = {}, method = 'POST') => (Object.assign({ [http2.constants.HTTP2_HEADER_PATH]: path, [http2.constants.HTTP2_HEADER_METHOD]: method, [http2.constants.HTTP2_HEADER_CONTENT_TYPE]: 'application/vnd.ksql.v1+json' }, options.headers));
 const createQueryStream = (client, options = {}) => {
     var _a;
     const stream = createRequest(client, createHeaders('/query-stream', options));
@@ -33,7 +33,7 @@ const executeStatement = (url, sql) => {
     return response;
 };
 const connect = (url = 'http://localhost:8088') => new Promise((resolve, reject) => {
-    const client = http2_1.default.connect(url);
+    const client = http2.connect(url);
     const ksqldb = {
         // Maps to the /query-stream endpoint
         query: (query, options = {}) => {

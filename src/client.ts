@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import http2 from 'http2';
+import * as http2 from 'http2';
 import axios, { AxiosResponse } from 'axios';
 import type { Duplex } from 'stream';
 import type { Client, QueryStream, RequestOptions } from './types';
