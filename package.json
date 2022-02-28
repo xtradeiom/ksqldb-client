@@ -1,7 +1,7 @@
 {
   "name": "@xtradeiom/ksqldb-client",
   "private": true,
-  "main": "./src/index.ts",
+  "main": "./dist/index.js",
   "scripts": {
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
     "test": "jest",
