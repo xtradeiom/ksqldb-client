@@ -48,7 +48,7 @@ class JsonResponseStream extends stream_1.Transform {
                     return;
                 // Push each parsed object individually
                 this.push(_.zipObject(this.columnNames, row));
-            });
+            }).value();
             // Reset the internal chunk value
             this._chunk = '';
             callback();

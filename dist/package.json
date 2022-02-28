@@ -2,7 +2,7 @@
     "name": "@xtradeiom/ksqldb-client",
     "private": true,
     "main": "./dist/index.js",
-    "version": "0.0.11",
+    "version": "0.0.12",
     "scripts": {
         "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
         "test": "jest",
