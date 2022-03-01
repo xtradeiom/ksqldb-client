@@ -1,11 +1,12 @@
 import { AxiosResponse } from 'axios';
 import type { OutgoingHttpHeaders } from 'http2';
 import { Duplex } from 'stream';
+import type { KsqlStream } from './transform';
 
 export type VoidFunction = () => void;
 
 export interface Client {
-  query: (query: string, options?: RequestOptions) => Duplex;
+  query: (query: string, options?: RequestOptions) => Duplex | KsqlStream;
   insert: (
     target: string,
     data: Array<Record<string, unknown>> | Record<string, unknown>,
@@ -14,7 +15,7 @@ export interface Client {
   statement: (sql: string) => Promise<AxiosResponse>;
   listStreams: () => Promise<AxiosResponse>;
   closeConnection: (cb?: VoidFunction) => void;
-  closeQuery: (queryId: string) => Duplex;
+  closeQuery: (query: string | KsqlStream) => Duplex;
 }
 
 export interface QueryStream {

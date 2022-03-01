@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { Transform, TransformCallback } from 'stream';
 
-export class JsonResponseStream extends Transform {
+export class KsqlStream extends Transform {
   columnNames: Array<string> | null = null;
   queryId = '';
   private _chunk = '';
@@ -43,7 +43,7 @@ export class JsonResponseStream extends Transform {
       // and fix it to instead find those newlines where they split each arraylike string [] item if so
       // --------------------------------------------------------------------------------------------------------
       // At this stage the chunk must end in a new line so we can process it
-      _.chain(`${this._chunk}${chunk}`)
+      _(`${this._chunk}${chunk}`)
         .split('\n')
         .compact()
         .forEach((c) => {
@@ -54,8 +54,7 @@ export class JsonResponseStream extends Transform {
 
           // Push each parsed object individually
           this.push(_.zipObject(this.columnNames, row));
-        })
-        .value();
+        });
 
       // Reset the internal chunk value
       this._chunk = '';
@@ -67,4 +66,4 @@ export class JsonResponseStream extends Transform {
   }
 }
 
-export const toJson = new JsonResponseStream();
+export const toJson = new KsqlStream();
