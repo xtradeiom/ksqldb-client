@@ -2,7 +2,7 @@
   "name": "ksqldb-client",
   "private": true,
   "main": "./dist/src/index.js",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "scripts": {
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
     "test": "jest",
