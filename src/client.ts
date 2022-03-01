@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import _ from 'lodash';
 import * as http2 from 'http2';
 import axios, { AxiosResponse } from 'axios';
 import type { Duplex } from 'stream';
@@ -8,7 +8,7 @@ import type {
   RequestOptions,
   VoidFunction,
 } from './types';
-import { toJson } from './transform';
+import { KsqlStream, toJson } from './transform';
 
 const createRequest = (
   client: http2.ClientHttp2Session,
@@ -90,7 +90,7 @@ export const connect = (url = 'http://localhost:8088'): Promise<Client> =>
       query: (
         query: string | QueryStream,
         options: RequestOptions = {},
-      ): Duplex => {
+      ): Duplex | KsqlStream => {
         const stream = createQueryStream(client, options);
 
         const payload = Buffer.from(
@@ -139,7 +139,9 @@ export const connect = (url = 'http://localhost:8088'): Promise<Client> =>
         return executeStatement(url, 'list streams;');
       },
 
-      closeQuery: (queryId: string): Duplex => {
+      closeQuery: (query: string | KsqlStream): Duplex => {
+        const queryId = _.get(query, 'queryId', query);
+
         const stream = createRequest(client, createHeaders('/close-query'));
 
         stream.end(JSON.stringify({ queryId }));

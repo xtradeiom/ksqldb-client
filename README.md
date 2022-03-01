@@ -19,7 +19,7 @@ interface KsqlDb {
 // This is the client interface per above
 interface Client {
   // Performs a query via http2 /query-stream endpoint
-  query: (query: string, options?: RequestOptions) => Duplex;
+  query: (query: string, options?: RequestOptions) => Duplex | KsqlStream;
 
   // Inserts into a 'stream|table' as the target the given data via http2 /insert-stream endpoint
   insert: (
@@ -38,7 +38,7 @@ interface Client {
   closeConnection: (cb?: VoidFunction) => void;
 
   // Closes an open query, such as when it is emitting changes
-  closeQuery: (queryId: string) => Duplex;
+  closeQuery: (queryId: string | KsqlStream) => Duplex;
 }
 ```
 
@@ -81,7 +81,7 @@ import ksqldb from '@xtradeiom/ksqldb-client';
 This is an example of what a small query program might look like
 
 ```ts
-import ksqldb, { RequestOptions } from '@xtradeiom/ksqldb-client';
+import ksqldb, { RequestOptions, KsqlStream } from '@xtradeiom/ksqldb-client';
 
 (async () => {
   const client = await ksqldb.connect();
@@ -93,14 +93,13 @@ import ksqldb, { RequestOptions } from '@xtradeiom/ksqldb-client';
 
   // Would have 'emit changes' on the end if we wanted streaming data
   // Notice that "bets" is quoted to enforce case sensitivity
-  const stream = client.query('select * from "bets";', opts);
+  const stream = <KsqlStream>client.query('select * from "bets";', opts);
 
   for await (const row of stream) {
     console.log('Query response: ', row);
   }
 
+  client.closeQuery(stream);
   client.closeConnection();
 })();
 ```
-
-For further examples take a look at the `kafka-backend` directory in the `infra/*` workspace
