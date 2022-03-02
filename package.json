@@ -1,7 +1,7 @@
 {
   "name": "ksqldb-client",
   "main": "./dist/src/index.js",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "scripts": {
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
     "test": "jest",
@@ -10,8 +10,7 @@
     "ts-node": "ts-node",
     "build": "npm run clean && tsc -p tsconfig.json",
     "typecheck": "tsc -p ./tsconfig.json --noEmit",
-    "format": "prettier --write .",
-    "postinstall": "npm run clean && npx tsc -p tsconfig.json"
+    "format": "prettier --write ."
   },
   "devDependencies": {
     "@types/jest": "^27.4.0",
