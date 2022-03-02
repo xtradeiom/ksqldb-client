@@ -1,10 +1,31 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.connect = void 0;
-const tslib_1 = require("tslib");
-const lodash_1 = (0, tslib_1.__importDefault)(require("lodash"));
-const http2 = (0, tslib_1.__importStar)(require("http2"));
-const axios_1 = (0, tslib_1.__importDefault)(require("axios"));
+const lodash_1 = __importDefault(require("lodash"));
+const http2 = __importStar(require("http2"));
+const axios_1 = __importDefault(require("axios"));
 const transform_1 = require("./transform");
 const createRequest = (client, headers) => client.request(headers);
 const createHeaders = (path, options = {}, method = 'POST') => (Object.assign({ [http2.constants.HTTP2_HEADER_PATH]: path, [http2.constants.HTTP2_HEADER_METHOD]: method, [http2.constants.HTTP2_HEADER_CONTENT_TYPE]: 'application/vnd.ksql.v1+json' }, options.headers));

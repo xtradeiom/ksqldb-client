@@ -1,9 +1,11 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.toJson = exports.KsqlStream = void 0;
-const tslib_1 = require("tslib");
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-const lodash_1 = (0, tslib_1.__importDefault)(require("lodash"));
+const lodash_1 = __importDefault(require("lodash"));
 const stream_1 = require("stream");
 class KsqlStream extends stream_1.Transform {
     constructor() {
