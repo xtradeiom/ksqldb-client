@@ -9,4 +9,3 @@ export declare class KsqlStream extends Transform {
     _transform(chunk: any, // eslint-disable-line @typescript-eslint/no-explicit-any
     _encoding: BufferEncoding, callback: TransformCallback): void;
 }
-export declare const toJson: KsqlStream;
