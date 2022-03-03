@@ -8,7 +8,7 @@ import type {
   RequestOptions,
   VoidFunction,
 } from './types';
-import { KsqlStream, toJson } from './transform';
+import { KsqlStream } from './transform';
 
 const createRequest = (
   client: http2.ClientHttp2Session,
@@ -104,7 +104,7 @@ export const connect = (url = 'http://localhost:8088'): Promise<Client> =>
         );
 
         const resultStream =
-          options.transform !== 'json' ? stream : stream.pipe(toJson);
+          options.transform !== 'json' ? stream : stream.pipe(new KsqlStream());
 
         stream.end(payload);
 
@@ -144,9 +144,7 @@ export const connect = (url = 'http://localhost:8088'): Promise<Client> =>
 
         const stream = createRequest(client, createHeaders('/close-query'));
 
-        stream.end(JSON.stringify({ queryId }));
-
-        return stream;
+        return queryId ? stream.end(JSON.stringify({ queryId })) : stream.end();
       },
 
       closeConnection: (cb?: VoidFunction) => client.close(cb),

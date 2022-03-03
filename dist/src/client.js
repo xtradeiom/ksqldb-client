@@ -65,7 +65,7 @@ const connect = (url = 'http://localhost:8088') => new Promise((resolve, reject)
                     sql: query,
                 }
                 : query));
-            const resultStream = options.transform !== 'json' ? stream : stream.pipe(transform_1.toJson);
+            const resultStream = options.transform !== 'json' ? stream : stream.pipe(new transform_1.KsqlStream());
             stream.end(payload);
             return resultStream;
         },
@@ -89,8 +89,7 @@ const connect = (url = 'http://localhost:8088') => new Promise((resolve, reject)
         closeQuery: (query) => {
             const queryId = lodash_1.default.get(query, 'queryId', query);
             const stream = createRequest(client, createHeaders('/close-query'));
-            stream.end(JSON.stringify({ queryId }));
-            return stream;
+            return queryId ? stream.end(JSON.stringify({ queryId })) : stream.end();
         },
         closeConnection: (cb) => client.close(cb),
     };

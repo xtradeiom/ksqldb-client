@@ -34,7 +34,7 @@ export class KsqlStream extends Transform {
 
       // If the chunk doesnt end in a newline, capture the string and send back no data
       if (!_.endsWith(chunk, '\n')) {
-        this._chunk = chunk;
+        this._chunk += chunk;
         return callback();
       }
 
@@ -47,8 +47,12 @@ export class KsqlStream extends Transform {
         .split('\n')
         .compact()
         .forEach((c) => {
-          const row = JSON.parse(c);
-
+          let row;
+          try {
+            row = JSON.parse(c);
+          } catch (e) {
+            throw new Error(`Ksql client parse error:\n${this._chunk}${chunk}`);
+          }
           // Pointlessly check columnNames again due to incorrect tslint
           if (!this.columnNames) return;
 
@@ -65,5 +69,3 @@ export class KsqlStream extends Transform {
     }
   }
 }
-
-export const toJson = new KsqlStream();

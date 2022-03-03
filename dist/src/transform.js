@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.toJson = exports.KsqlStream = void 0;
+exports.KsqlStream = void 0;
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 const lodash_1 = __importDefault(require("lodash"));
 const stream_1 = require("stream");
@@ -32,7 +32,7 @@ class KsqlStream extends stream_1.Transform {
                 return callback();
             // If the chunk doesnt end in a newline, capture the string and send back no data
             if (!lodash_1.default.endsWith(chunk, '\n')) {
-                this._chunk = chunk;
+                this._chunk += chunk;
                 return callback();
             }
             // --------------------------------------------------------------------------------------------------------
@@ -44,7 +44,13 @@ class KsqlStream extends stream_1.Transform {
                 .split('\n')
                 .compact()
                 .forEach((c) => {
-                const row = JSON.parse(c);
+                let row;
+                try {
+                    row = JSON.parse(c);
+                }
+                catch (e) {
+                    throw new Error(`Ksql client parse error:\n${this._chunk}${chunk}`);
+                }
                 // Pointlessly check columnNames again due to incorrect tslint
                 if (!this.columnNames)
                     return;
@@ -61,5 +67,4 @@ class KsqlStream extends stream_1.Transform {
     }
 }
 exports.KsqlStream = KsqlStream;
-exports.toJson = new KsqlStream();
 //# sourceMappingURL=transform.js.map
