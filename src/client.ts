@@ -51,18 +51,25 @@ const createInsertStream = (
   return stream;
 };
 
+// Converts an unknown value to quote all object keys
+const convertItem = (e: unknown): unknown => {
+  // Anything that is not an object or array gets returned
+  if (!_.isObjectLike(e)) return e;
+
+  // Arrays are returned mapped through this function to convert any nested objects
+  if (_.isArray(e)) return e.map(convertItem);
+
+  // Objects are reassembled to quote their keys and map their values
+  return _.zipObject(
+    _.keys(e).map((key) => `"${key}"`),
+    _.values(e).map(convertItem),
+  );
+};
+
 // Quotes object keys and converts to json strings
 const convertInsertPayload = (
   data: Array<Record<string, unknown>> | Record<string, unknown>,
-) =>
-  _.castArray(data).map((e) =>
-    JSON.stringify(
-      _.zipObject(
-        _.keys(e).map((key) => `"${key}"`),
-        _.values(e),
-      ),
-    ),
-  );
+) => _.castArray(data).map((e) => JSON.stringify(convertItem(e)));
 
 // Executes a statement against the http 1 /ksql endpoint
 const executeStatement = (url: string, sql: string) => {

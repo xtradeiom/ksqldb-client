@@ -41,8 +41,19 @@ const createInsertStream = (client, options = {}) => {
     stream.setEncoding((_a = options.encoding) !== null && _a !== void 0 ? _a : 'utf8');
     return stream;
 };
+// Converts an unknown value to quote all object keys
+const convertItem = (e) => {
+    // Anything that is not an object or array gets returned
+    if (!lodash_1.default.isObjectLike(e))
+        return e;
+    // Arrays are returned mapped through this function to convert any nested objects
+    if (lodash_1.default.isArray(e))
+        return e.map(convertItem);
+    // Objects are reassembled to quote their keys and map their values
+    return lodash_1.default.zipObject(lodash_1.default.keys(e).map((key) => `"${key}"`), lodash_1.default.values(e).map(convertItem));
+};
 // Quotes object keys and converts to json strings
-const convertInsertPayload = (data) => lodash_1.default.castArray(data).map((e) => JSON.stringify(lodash_1.default.zipObject(lodash_1.default.keys(e).map((key) => `"${key}"`), lodash_1.default.values(e))));
+const convertInsertPayload = (data) => lodash_1.default.castArray(data).map((e) => JSON.stringify(convertItem(e)));
 // Executes a statement against the http 1 /ksql endpoint
 const executeStatement = (url, sql) => {
     const response = axios_1.default.post(`${url}/ksql`, JSON.stringify({
